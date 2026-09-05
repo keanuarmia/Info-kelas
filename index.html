@@ -86,36 +86,36 @@
 </div>
 
 <script>
-    // ID Google Sheets milik Anda
     const SHEET_ID = '1hJs_TSgrZOVpAnPpVhH6k2XK_RemA2hwgMuf1qkFoXM';
-    
-    // URL API Google Sheets yang sudah diperbaiki lokasinya
     const url = `https://google.com{SHEET_ID}/gviz/tq?tqx=out:json`;
 
     fetch(url)
-        .then(res => res.text())
+        .then(res => {
+            if (!res.ok) throw new Error("Gagal mengambil data dari Google Sheets");
+            return res.text();
+        })
         .then(txt => {
-            // Bersihkan bungkus teks bawaan Google API agar menjadi JSON murni
             const jsonString = txt.substring(txt.indexOf("{"), txt.lastIndexOf("}") + 1);
             const json = JSON.parse(jsonString);
             const rows = json.table.rows;
             
             const tableBody = document.getElementById('table-body');
-            tableBody.innerHTML = ''; // Bersihkan tulisan loading
+            tableBody.innerHTML = ''; 
 
             rows.forEach(row => {
                 const cells = row.c;
+                if (!cells) return; // Lewati jika baris kosong total
                 
-                // Mengambil nilai teks dari setiap sel dengan validasi agar tidak error jika kosong
+                // PERBAIKAN UTAMA: Validasi indeks array cells dengan benar
                 const no = cells[0] && cells[0].v !== null ? cells[0].v : '';
                 const mapel = cells[1] && cells[1].v !== null ? cells[1].v : '';
                 const tugas = cells[2] && cells[2].v !== null ? cells[2].v : '';
                 
-                // Khusus tanggal menggunakan format ter-render (.f) agar tidak berantakan
+                // Penanganan khusus format tanggal (.f) agar tidak merusak UI website
                 const deadline = cells[3] ? (cells[3].f ? cells[3].f : (cells[3].v !== null ? cells[3].v : '')) : '';
                 const keterangan = cells[4] && cells[4].v !== null ? cells[4].v : '';
 
-                // Lewati baris pertama jika itu adalah Judul Kolom (No, Mapel, dst)
+                // Lewati baris header jika terbawa
                 if (no.toString().toLowerCase() === 'no') return;
 
                 if (no !== '') {
@@ -136,7 +136,7 @@
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Detail Error:', error);
             document.getElementById('table-body').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Gagal memuat data. Silakan periksa kembali koneksi atau kode Anda.</td></tr>';
         });
 </script>
