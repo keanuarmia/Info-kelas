@@ -51,22 +51,19 @@
         tr:hover {
             background-color: #f5f5f5;
         }
-        .badge {
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #7f8c8d;
         }
-        .badge-urgent { background-color: #e74c3c; color: white; }
-        .badge-normal { background-color: #f39c12; color: white; }
-        .badge-ub { background-color: #9b59b6; color: white; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>📅 Agenda & Tugas Kelas</h1>
-    <p class="subtitle">Pembaruan harian oleh PJ Disiplin</p>
+    <p class="subtitle">Pembaruan otomatis via Google Sheets</p>
 
     <div class="table-container">
         <table>
@@ -79,18 +76,58 @@
                     <th style="width: 20%;">Keterangan</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="table-body">
                 <tr>
-                    <td>1</td>
-                    <td><strong>Contoh Mapel</strong></td>
-                    <td>Ini adalah contoh isi tugas kelas Anda.</td>
-                    <td>Besok, 07:00 WIB</td>
-                    <td><span class="badge badge-urgent">Penting!</span></td>
+                    <td colspan="5" class="loading">Memuat data tugas terbaru...</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+    // ID Google Sheets milik Anda sudah langsung dipasang di bawah ini:
+    const SHEET_ID = '1an8GA3620cD38Dvb1H6YRAYS1hs5hq04mThLdfWuKO8';
+    const SHEET_TITLE = 'Sheet1'; 
+    
+    const url = `https://google.com{SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_TITLE}`;
+
+    fetch(url)
+        .then(res => res.text())
+        .then(data => {
+            const rows = data.split('\n').slice(1); 
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = ''; 
+
+            rows.forEach(row => {
+                const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                
+                if (columns.length >= 5) {
+                    const no = columns[0].replace(/^"|"$/g, '').trim();
+                    const mapel = columns[1].replace(/^"|"$/g, '').trim();
+                    const tugas = columns[2].replace(/^"|"$/g, '').trim();
+                    const deadline = columns[3].replace(/^"|"$/g, '').trim();
+                    const keterangan = columns[4].replace(/^"|"$/g, '').trim();
+
+                    if(no !== "") { 
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${no}</td>
+                            <td><strong>${mapel}</strong></td>
+                            <td>${tugas}</td>
+                            <td>${deadline}</td>
+                            <td>${keterangan}</td>
+                        `;
+                        tableBody.appendChild(tr);
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('table-body').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Gagal memuat data. Periksa pengaturan share Google Sheets Anda.</td></tr>';
+        });
+</script>
 
 </body>
 </html>
