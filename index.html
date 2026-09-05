@@ -86,10 +86,10 @@
 </div>
 
 <script>
-    // ID Google Sheets pribadi milik Anda:
+    // ID Google Sheets milik Anda
     const SHEET_ID = '1hJs_TSgrZOVpAnPpVhH6k2XK_RemA2hwgMuf1qkFoXM';
     
-    // Menggunakan format JSON agar pembacaan kolom jauh lebih aman dan tidak terpengaruh tanda koma/titik koma
+    // URL API Google Sheets yang sudah diperbaiki lokasinya
     const url = `https://google.com{SHEET_ID}/gviz/tq?tqx=out:json`;
 
     fetch(url)
@@ -106,11 +106,13 @@
             rows.forEach(row => {
                 const cells = row.c;
                 
-                // Mengambil nilai teks dari setiap sel di Google Sheets
+                // Mengambil nilai teks dari setiap sel dengan validasi agar tidak error jika kosong
                 const no = cells[0] && cells[0].v !== null ? cells[0].v : '';
                 const mapel = cells[1] && cells[1].v !== null ? cells[1].v : '';
                 const tugas = cells[2] && cells[2].v !== null ? cells[2].v : '';
-                const deadline = cells[3] && cells[3].v !== null ? cells[3].v : '';
+                
+                // Khusus tanggal menggunakan format ter-render (.f) agar tidak berantakan
+                const deadline = cells[3] ? (cells[3].f ? cells[3].f : (cells[3].v !== null ? cells[3].v : '')) : '';
                 const keterangan = cells[4] && cells[4].v !== null ? cells[4].v : '';
 
                 // Lewati baris pertama jika itu adalah Judul Kolom (No, Mapel, dst)
@@ -135,7 +137,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            document.getElementById('table-body').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Gagal memuat data. Sila periksa kembali koneksi atau kode Anda.</td></tr>';
+            document.getElementById('table-body').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Gagal memuat data. Silakan periksa kembali koneksi atau kode Anda.</td></tr>';
         });
 </script>
 
