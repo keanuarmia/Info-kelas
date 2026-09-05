@@ -91,7 +91,7 @@
 
     fetch(url)
         .then(res => {
-            if (!res.ok) throw new Error("Gagal mengambil data dari Google Sheets");
+            if (!res.ok) throw new Error("Gagal mengambil data");
             return res.text();
         })
         .then(txt => {
@@ -104,18 +104,18 @@
 
             rows.forEach(row => {
                 const cells = row.c;
-                if (!cells) return; // Lewati jika baris kosong total
+                if (!cells) return; 
                 
-                // PERBAIKAN UTAMA: Validasi indeks array cells dengan benar
+                // PERBAIKAN FINAL: Membaca indeks kolom array dengan benar [0] sampai [4]
                 const no = cells[0] && cells[0].v !== null ? cells[0].v : '';
                 const mapel = cells[1] && cells[1].v !== null ? cells[1].v : '';
                 const tugas = cells[2] && cells[2].v !== null ? cells[2].v : '';
                 
-                // Penanganan khusus format tanggal (.f) agar tidak merusak UI website
+                // Membaca format tampilan tanggal string asli dari Sheets (.f)
                 const deadline = cells[3] ? (cells[3].f ? cells[3].f : (cells[3].v !== null ? cells[3].v : '')) : '';
                 const keterangan = cells[4] && cells[4].v !== null ? cells[4].v : '';
 
-                // Lewati baris header jika terbawa
+                // Lewati baris judul kolom jika terbawa
                 if (no.toString().toLowerCase() === 'no') return;
 
                 if (no !== '') {
