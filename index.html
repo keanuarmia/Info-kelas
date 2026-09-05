@@ -106,12 +106,12 @@
                 const cells = row.c;
                 if (!cells) return; 
                 
-                // PERBAIKAN FINAL: Membaca indeks kolom array dengan benar [0] sampai [4]
+                // PERBAIKAN UTAMA: Penambahan indeks array [0] sampai [4] agar terbaca oleh JavaScript
                 const no = cells[0] && cells[0].v !== null ? cells[0].v : '';
                 const mapel = cells[1] && cells[1].v !== null ? cells[1].v : '';
                 const tugas = cells[2] && cells[2].v !== null ? cells[2].v : '';
                 
-                // Membaca format tampilan tanggal string asli dari Sheets (.f)
+                // Membaca format string teks tanggal (.f) agar tidak merusak UI website
                 const deadline = cells[3] ? (cells[3].f ? cells[3].f : (cells[3].v !== null ? cells[3].v : '')) : '';
                 const keterangan = cells[4] && cells[4].v !== null ? cells[4].v : '';
 
