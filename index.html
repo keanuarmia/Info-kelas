@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda & Tugas Kelas</title>
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,6 +13,7 @@
             padding: 20px;
             color: #333;
         }
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -20,50 +22,57 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
         h1 {
             text-align: center;
             color: #2c3e50;
             margin-bottom: 5px;
             cursor: pointer;
-            user-select: none; /* Mencegah teks ter-blok saat diklik cepat */
+            user-select: none;
         }
+
         p.subtitle {
             text-align: center;
             color: #7f8c8d;
             margin-bottom: 25px;
         }
-        
-        /* Formulir Input Rahasia (Disembunyikan secara bawaan) */
+
+        /* Formulir Input Rahasia */
         .form-container {
-            display: none; 
+            display: none;
             background-color: #ecf0f1;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 25px;
             border: 2px dashed #2980b9;
         }
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin-bottom: 15px;
         }
+
         .form-group {
             display: flex;
             flex-direction: column;
         }
+
         .form-group label {
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 5px;
             color: #34495e;
         }
+
         .form-group input {
             padding: 8px 12px;
             border: 1px solid #bdc3c7;
             border-radius: 4px;
             font-size: 14px;
         }
+
         .btn-submit {
             background-color: #2ecc71;
             color: white;
@@ -75,29 +84,43 @@
             cursor: pointer;
             width: 100%;
         }
-        .btn-submit:hover { background-color: #27ae60; }
+
+        .btn-submit:hover {
+            background-color: #27ae60;
+        }
 
         /* Gaya Tabel */
-        .table-container { overflow-x: auto; }
+        .table-container {
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
+
         th, td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #2980b9;
             color: white;
             font-weight: 600;
         }
-        tr:hover { background-color: #f5f5f5; }
-        
-        /* Tombol Hapus (Disembunyikan secara bawaan) */
-        .col-aksi { display: none; }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Tombol Hapus */
+        .col-aksi {
+            display: none;
+        }
+
         .btn-delete {
             background-color: #e74c3c;
             color: white;
@@ -107,14 +130,18 @@
             cursor: pointer;
             font-size: 13px;
         }
-        .btn-delete:hover { background-color: #c0392b; }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+
         .no-data {
             text-align: center;
             color: #7f8c8d;
             font-style: italic;
             padding: 20px;
         }
-        
+
         /* Notifikasi Status Admin */
         .admin-badge {
             display: none;
@@ -129,43 +156,83 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
+
     <!-- Judul ini yang harus diklik 5 kali -->
     <h1 id="secret-title">📅 Agenda & Tugas Kelas</h1>
-    <p class="subtitle">Pembaruan harian oleh PJ Disiplin</p>
-    
-    <div id="admin-status" class="admin-badge">🔓 MODE ADMIN AKTIF</div>
+
+    <p class="subtitle">
+        Pembaruan harian oleh PJ Disiplin
+    </p>
+
+    <div id="admin-status" class="admin-badge">
+        🔓 MODE ADMIN AKTIF
+    </div>
 
     <!-- Formulir Tambah Tugas -->
     <div id="admin-form" class="form-container">
+
         <form id="todo-form">
+
             <div class="form-grid">
+
                 <div class="form-group">
                     <label for="mapel">Mata Pelajaran</label>
-                    <input type="text" id="mapel" placeholder="Contoh: Matematika" required>
+                    <input
+                        type="text"
+                        id="mapel"
+                        placeholder="Contoh: Matematika"
+                        required
+                    >
                 </div>
+
                 <div class="form-group">
                     <label for="tugas">Nama Tugas / Agenda</label>
-                    <input type="text" id="tugas" placeholder="Contoh: PR Halaman 45" required>
+                    <input
+                        type="text"
+                        id="tugas"
+                        placeholder="Contoh: PR Halaman 45"
+                        required
+                    >
                 </div>
+
                 <div class="form-group">
                     <label for="deadline">Deadline</label>
-                    <input type="text" id="deadline" placeholder="Contoh: Besok, 07:00 WIB" required>
+                    <input
+                        type="text"
+                        id="deadline"
+                        placeholder="Contoh: Besok, 07:00 WIB"
+                        required
+                    >
                 </div>
+
                 <div class="form-group">
                     <label for="keterangan">Keterangan</label>
-                    <input type="text" id="keterangan" placeholder="Contoh: Penting / Kelompok">
+                    <input
+                        type="text"
+                        id="keterangan"
+                        placeholder="Contoh: Penting / Kelompok"
+                    >
                 </div>
+
             </div>
-            <button type="submit" class="btn-submit">➕ Tambah Tugas Baru</button>
+
+            <button type="submit" class="btn-submit">
+                ➕ Tambah Tugas Baru
+            </button>
+
         </form>
+
     </div>
 
     <!-- Tabel Tampilan -->
     <div class="table-container">
+
         <table>
+
             <thead>
                 <tr>
                     <th style="width: 5%;">No</th>
@@ -176,172 +243,413 @@
                     <th class="col-aksi" style="width: 5%;">Aksi</th>
                 </tr>
             </thead>
+
             <tbody id="table-body">
                 <!-- Data otomatis dimuat di sini -->
             </tbody>
+
         </table>
+
     </div>
+
 </div>
 
+
+<!-- LIBRARY SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
-    const SUPABASE_URL = 'https://ofikhymoplfgahogmeml.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_j0DKnHBNpb6HCHW7aal3oA_KaLCTTwZ';
-    
-    const supabase = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-    
-    const form = document.getElementById('todo-form');
-    const tableBody = document.getElementById('table-body');
-    const secretTitle = document.getElementById('secret-title');
-    
+
+    // =====================================================
+    // PENGATURAN SUPABASE
+    // =====================================================
+
+    const SUPABASE_URL =
+        'https://ofikhymoplfgahogmeml.supabase.co';
+
+    const SUPABASE_KEY =
+        'sb_publishable_j0DKnHBNpb6HCHW7aal3oA_KaLCTTwZ';
+
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    // =====================================================
+    // ELEMENT HTML
+    // =====================================================
+
+    const form =
+        document.getElementById('todo-form');
+
+    const tableBody =
+        document.getElementById('table-body');
+
+    const secretTitle =
+        document.getElementById('secret-title');
+
+
     let isAdmin = false;
 
-    // --- FITUR KETUKAN RAHASIA ---
+
+    // =====================================================
+    // FITUR KETUKAN RAHASIA
+    // =====================================================
+
     let clickCount = 0;
     let firstClickTime = 0;
 
+
     secretTitle.addEventListener('click', () => {
-        const currentTime = new Date().getTime();
-        
+
+        const currentTime =
+            new Date().getTime();
+
+
         if (clickCount === 0) {
             firstClickTime = currentTime;
         }
 
-        // Jika waktu ketukan sudah lewat dari 3 detik, reset hitungan dari awal
-        if (currentTime - firstClickTime > 3000) {
+
+        // Jika sudah lewat 3 detik,
+        // hitungan dimulai lagi
+        if (
+            currentTime - firstClickTime > 3000
+        ) {
+
             clickCount = 1;
             firstClickTime = currentTime;
+
         } else {
+
             clickCount++;
+
         }
 
-        // Jika berhasil klik 5 kali dalam waktu kurang dari atau sama dengan 3 detik
+
+        // Klik 5 kali
         if (clickCount === 5) {
-            clickCount = 0; // reset hitungan
-            const password = prompt("Masukkan Password Admin:");
-            
+
+            clickCount = 0;
+
+            const password =
+                prompt("Masukkan Password Admin:");
+
+
             if (password === "404") {
+
                 aktifkanModeAdmin();
+
             } else {
+
                 alert("Password salah!");
+
             }
+
         }
+
     });
 
+
+    // =====================================================
+    // AKTIFKAN MODE ADMIN
+    // =====================================================
+
     function aktifkanModeAdmin() {
+
         isAdmin = true;
-        document.getElementById('admin-form').style.display = 'block';
-        document.getElementById('admin-status').style.display = 'block';
-        
-        // Memunculkan kolom aksi "Hapus" di tabel kepala
-        document.querySelectorAll('.col-aksi').forEach(el => el.style.display = 'table-cell');
+
+
+        document.getElementById('admin-form')
+            .style.display = 'block';
+
+
+        document.getElementById('admin-status')
+            .style.display = 'block';
+
+
+        document.querySelectorAll('.col-aksi')
+            .forEach(el => {
+
+                el.style.display = 'table-cell';
+
+            });
+
+
         tampilkanTugas();
+
     }
 
-    // --- PENGATURAN DATA TUGAS ---
+
+    // =====================================================
+    // MENGAMBIL DATA DARI SUPABASE
+    // =====================================================
+
     async function dapatkanTugas() {
-    const { data, error } = await supabase
-        .from('tugas')
-        .select('*')
-        .order('created_at', { ascending: false });
 
-    if (error) {
-        console.error('Gagal mengambil tugas:', error);
-        alert('Gagal memuat data tugas.');
-        return [];
-    }
+        const { data, error } =
+            await supabaseClient
+                .from('tugas')
+                .select('*')
+                .order('created_at', {
+                    ascending: false
+                });
 
-    return data || [];
-}
-
-    async function tampilkanTugas() {
-        const daftarTugas = await dapatkanTugas();
-        tableBody.innerHTML = '';
-
-        if (daftarTugas.length === 0) {
-            const totalKolom = isAdmin ? 6 : 5;
-            tableBody.innerHTML = `<tr><td colspan="${totalKolom}" class="no-data">Belum ada agenda atau tugas kelas saat ini.</td></tr>`;
-            return;
-        }
-
-        daftarTugas.forEach((item, index) => {
-            const tr = document.createElement('tr');
-            
-            // Tampilan baris data standar
-            let isiBaris = `
-                <td>${index + 1}</td>
-                <td><strong>${item.mapel}</strong></td>
-                <td>${item.tugas}</td>
-                <td>${item.deadline}</td>
-                <td>${item.keterangan || '-'}</td>
-            `;
-            
-            // Tambahkan kolom tombol hapus hanya jika mode admin aktif
-            if (isAdmin) {
-                isiBaris += `<td class="col-aksi"><button class="btn-delete" onclick="hapusTugas(${item.id})">Hapus</button></td>`;
-            }
-
-            tr.innerHTML = isiBaris;
-            tableBody.appendChild(tr);
-        });
-        
-        // Memastikan kolom data aksi ikut muncul/hilang sesuai status admin
-        document.querySelectorAll('.col-aksi').forEach(el => {
-            el.style.display = isAdmin ? 'table-cell' : 'none';
-        });
-    }
-
-    // Tambah Tugas
-   form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const mapel = document.getElementById('mapel').value;
-    const tugas = document.getElementById('tugas').value;
-    const deadline = document.getElementById('deadline').value;
-    const keterangan = document.getElementById('keterangan').value;
-
-    const { error } = await supabase
-        .from('tugas')
-        .insert([{
-            mapel: mapel,
-            tugas: tugas,
-            deadline: deadline,
-            keterangan: keterangan
-        }]);
-
-    if (error) {
-        console.error('Gagal menambahkan tugas:', error);
-        alert('Gagal menambahkan tugas.');
-        return;
-    }
-
-    await tampilkanTugas();
-    form.reset();
-});
-    
-    // Hapus Tugas
-    window.hapusTugas = async function(id) {
-    if (confirm("Apakah Anda yakin ingin menghapus tugas ini?")) {
-        const { error } = await supabase
-            .from('tugas')
-            .delete()
-            .eq('id', id);
 
         if (error) {
-            console.error('Gagal menghapus tugas:', error);
-            alert('Gagal menghapus tugas.');
-            return;
+
+            console.error(
+                'Gagal mengambil tugas:',
+                error
+            );
+
+            alert(
+                'Gagal memuat data tugas.'
+            );
+
+            return [];
+
         }
 
-        await tampilkanTugas();
+
+        return data || [];
+
     }
-}
+
+
+    // =====================================================
+    // MENAMPILKAN DATA TUGAS
+    // =====================================================
+
+    async function tampilkanTugas() {
+
+        const daftarTugas =
+            await dapatkanTugas();
+
+
+        tableBody.innerHTML = '';
+
+
+        // Jika tidak ada data
+        if (daftarTugas.length === 0) {
+
+            const totalKolom =
+                isAdmin ? 6 : 5;
+
+
+            tableBody.innerHTML = `
+                <tr>
+                    <td
+                        colspan="${totalKolom}"
+                        class="no-data"
+                    >
+                        Belum ada agenda atau tugas kelas saat ini.
+                    </td>
+                </tr>
+            `;
+
+            return;
+
+        }
+
+
+        // Menampilkan setiap tugas
+        daftarTugas.forEach(
+            (item, index) => {
+
+                const tr =
+                    document.createElement('tr');
+
+
+                let isiBaris = `
+
+                    <td>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${item.mapel}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${item.tugas}
+                    </td>
+
+                    <td>
+                        ${item.deadline}
+                    </td>
+
+                    <td>
+                        ${item.keterangan || '-'}
+                    </td>
+
+                `;
+
+
+                // Tombol hapus hanya untuk admin
+                if (isAdmin) {
+
+                    isiBaris += `
+
+                        <td class="col-aksi">
+
+                            <button
+                                class="btn-delete"
+                                onclick="hapusTugas(${item.id})"
+                            >
+                                Hapus
+                            </button>
+
+                        </td>
+
+                    `;
+
+                }
+
+
+                tr.innerHTML =
+                    isiBaris;
+
+
+                tableBody.appendChild(tr);
+
+            }
+        );
+
+
+        // Tampilkan/sembunyikan kolom aksi
+        document.querySelectorAll('.col-aksi')
+            .forEach(el => {
+
+                el.style.display =
+                    isAdmin
+                        ? 'table-cell'
+                        : 'none';
+
+            });
+
+    }
+
+
+    // =====================================================
+    // TAMBAH TUGAS
+    // =====================================================
+
+    form.addEventListener(
+        'submit',
+        async function(e) {
+
+            e.preventDefault();
+
+
+            const mapel =
+                document.getElementById('mapel').value;
+
+            const tugas =
+                document.getElementById('tugas').value;
+
+            const deadline =
+                document.getElementById('deadline').value;
+
+            const keterangan =
+                document.getElementById('keterangan').value;
+
+
+            const { error } =
+                await supabaseClient
+                    .from('tugas')
+                    .insert([
+
+                        {
+                            mapel: mapel,
+                            tugas: tugas,
+                            deadline: deadline,
+                            keterangan: keterangan
+                        }
+
+                    ]);
+
+
+            if (error) {
+
+                console.error(
+                    'Gagal menambahkan tugas:',
+                    error
+                );
+
+                alert(
+                    'Gagal menambahkan tugas.'
+                );
+
+                return;
+
+            }
+
+
+            await tampilkanTugas();
+
+
+            form.reset();
+
+        }
+    );
+
+
+    // =====================================================
+    // HAPUS TUGAS
+    // =====================================================
+
+    window.hapusTugas =
+        async function(id) {
+
+            if (
+                confirm(
+                    "Apakah Anda yakin ingin menghapus tugas ini?"
+                )
+            ) {
+
+                const { error } =
+                    await supabaseClient
+                        .from('tugas')
+                        .delete()
+                        .eq('id', id);
+
+
+                if (error) {
+
+                    console.error(
+                        'Gagal menghapus tugas:',
+                        error
+                    );
+
+                    alert(
+                        'Gagal menghapus tugas.'
+                    );
+
+                    return;
+
+                }
+
+
+                await tampilkanTugas();
+
+            }
+
+        };
+
+
+    // =====================================================
+    // JALANKAN SAAT WEBSITE DIBUKA
+    // =====================================================
 
     tampilkanTugas();
+
 </script>
 
 </body>
