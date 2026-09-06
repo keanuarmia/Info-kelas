@@ -16,393 +16,448 @@ const supabaseClient =
 
 
 // =========================
-// ELEMENT HTML
+// TUNGGU HTML SELESAI DIMUAT
 // =========================
 
-const form =
-    document.getElementById('todo-form');
+document.addEventListener('DOMContentLoaded', () => {
 
-const tableBody =
-    document.getElementById('table-body');
+    // =========================
+    // ELEMENT HTML
+    // =========================
 
-const secretTitle =
-    document.getElementById('secret-title');
+    const todoForm =
+        document.getElementById('todo-form');
 
-const mapelSelect =
-    document.getElementById('mapel');
+    const tableBody =
+        document.getElementById('table-body');
 
-const mapelCustom =
-    document.getElementById('mapel-custom');
+    const secretTitle =
+        document.getElementById('secret-title');
 
-let isAdmin = false;
+    const mapelSelect =
+        document.getElementById('mapel');
 
+    const mapelCustom =
+        document.getElementById('mapel-custom');
 
-// =========================
-// CUSTOM MAPEL
-// =========================
-
-mapelSelect.addEventListener('change', () => {
-
-    if (mapelSelect.value === 'Custom') {
-
-        mapelCustom.style.display = 'block';
-        mapelCustom.required = true;
-
-    } else {
-
-        mapelCustom.style.display = 'none';
-        mapelCustom.required = false;
-        mapelCustom.value = '';
-    }
-});
+    let isAdmin = false;
 
 
-// =========================
-// KLIK RAHASIA 5X PADA "NO"
-// =========================
+    // =========================
+    // CEK ELEMENT HTML
+    // =========================
 
-let clickCount = 0;
-let firstClickTime = 0;
-
-secretTitle.addEventListener('click', () => {
-
-    const currentTime =
-        new Date().getTime();
-
-    if (clickCount === 0) {
-        firstClickTime = currentTime;
+    if (!todoForm) {
+        console.error('Element #todo-form tidak ditemukan.');
+        return;
     }
 
-    if (currentTime - firstClickTime > 3000) {
-
-        clickCount = 1;
-        firstClickTime = currentTime;
-
-    } else {
-
-        clickCount++;
-    }
-
-    if (clickCount === 5) {
-
-        clickCount = 0;
-
-        const password =
-            prompt("Masukkan Password Admin:");
-
-        if (password === "404") {
-
-            aktifkanModeAdmin();
-
-        } else {
-
-            alert("Password salah!");
-        }
-    }
-});
-
-
-// =========================
-// AKTIFKAN MODE ADMIN
-// =========================
-
-function aktifkanModeAdmin() {
-
-    isAdmin = true;
-
-    document.getElementById('admin-form')
-        .style.display = 'block';
-
-    document.getElementById('admin-status')
-        .style.display = 'block';
-
-    document.querySelectorAll('.col-aksi')
-        .forEach(el => {
-            el.style.display = 'table-cell';
-        });
-
-    tampilkanTugas();
-}
-
-
-// =========================
-// AMBIL DATA DARI SUPABASE
-// =========================
-
-async function dapatkanTugas() {
-
-    const { data, error } =
-        await supabaseClient
-            .from('tugas')
-            .select('*')
-            .order('created_at', {
-                ascending: false
-            });
-
-    if (error) {
-
-        console.error(
-            'Gagal mengambil tugas:',
-            error
-        );
-
-        alert(
-            'Gagal memuat data tugas.'
-        );
-
-        return [];
-    }
-
-    return data || [];
-}
-
-
-// =========================
-// WARNA MAPEL
-// =========================
-
-function warnaMapel(mapel) {
-
-    const nama =
-        mapel.trim().toLowerCase();
-
-    const warna = {
-
-        'b. arab': 'mapel-arab',
-
-        'b. indo': 'mapel-indo',
-
-        'b. inggris': 'mapel-inggris',
-
-        'biologi': 'mapel-biologi',
-
-        'fisika': 'mapel-fisika',
-
-        'kimia': 'mapel-kimia',
-
-        'matlan': 'mapel-matlan',
-
-        'matwa': 'mapel-matwa',
-
-        'pai': 'mapel-pai',
-
-        'ppkn': 'mapel-ppkn',
-
-        'sejarah': 'mapel-sejarah',
-
-        'tik': 'mapel-tik'
-    };
-
-    return warna[nama] || '';
-}
-
-
-// =========================
-// TAMPILKAN DATA TUGAS
-// =========================
-
-async function tampilkanTugas() {
-
-    const daftarTugas =
-        await dapatkanTugas();
-
-    tableBody.innerHTML = '';
-
-
-    if (daftarTugas.length === 0) {
-
-        const totalKolom =
-            isAdmin ? 6 : 5;
-
-        tableBody.innerHTML = `
-            <tr>
-                <td
-                    colspan="${totalKolom}"
-                    class="no-data"
-                >
-                    Belum ada agenda atau tugas kelas saat ini.
-                </td>
-            </tr>
-        `;
-
+    if (!tableBody) {
+        console.error('Element #table-body tidak ditemukan.');
         return;
     }
 
 
-    daftarTugas.forEach(
-        (item, index) => {
+    // =========================
+    // CUSTOM MAPEL
+    // =========================
 
-            const tr =
-                document.createElement('tr');
+    if (mapelSelect && mapelCustom) {
 
-            let isiBaris = `
+        mapelSelect.addEventListener('change', () => {
 
-                <td>
-                    ${index + 1}
-                </td>
+            if (mapelSelect.value === 'Custom') {
 
-                <td>
-                    <span class="mapel-badge ${warnaMapel(item.mapel)}">
-                        ${item.mapel}
-                    </span>
-                </td>
+                mapelCustom.style.display = 'block';
+                mapelCustom.required = true;
 
-                <td>
-                    ${item.tugas}
-                </td>
+            } else {
 
-                <td>
-                    ${item.deadline}
-                </td>
-
-                <td>
-                    ${item.keterangan || '-'}
-                </td>
-            `;
-
-
-            if (isAdmin) {
-
-                isiBaris += `
-
-                    <td class="col-aksi">
-
-                        <button
-                            class="btn-edit"
-                            onclick="editTugas(${item.id})"
-                        >
-                            Edit
-                        </button>
-
-                        <button
-                            class="btn-delete"
-                            onclick="hapusTugas(${item.id})"
-                        >
-                            Hapus
-                        </button>
-
-                    </td>
-                `;
+                mapelCustom.style.display = 'none';
+                mapelCustom.required = false;
+                mapelCustom.value = '';
             }
-
-
-            tr.innerHTML =
-                isiBaris;
-
-            tableBody.appendChild(tr);
-        }
-    );
-
-
-    document.querySelectorAll('.col-aksi')
-        .forEach(el => {
-
-            el.style.display =
-                isAdmin
-                    ? 'table-cell'
-                    : 'none';
         });
-}
+    }
 
 
-// =========================
-// TAMBAH TUGAS
-// =========================
+    // =========================
+    // KLIK RAHASIA 5X PADA "NO"
+    // =========================
 
-form.addEventListener(
-    'submit',
-    async function(e) {
+    let clickCount = 0;
+    let firstClickTime = 0;
 
-        e.preventDefault();
+    if (secretTitle) {
+
+        secretTitle.addEventListener('click', () => {
+
+            const currentTime =
+                new Date().getTime();
 
 
-        let mapel =
-            document.getElementById('mapel').value;
-
-
-        // Jika memilih Custom,
-        // gunakan nama yang diketik
-        if (mapel === 'Custom') {
-
-            mapel =
-                document.getElementById('mapel-custom').value.trim();
-
-            if (!mapel) {
-
-                alert(
-                    'Silakan masukkan nama mata pelajaran.'
-                );
-
-                return;
+            if (clickCount === 0) {
+                firstClickTime = currentTime;
             }
+
+
+            if (
+                currentTime - firstClickTime > 3000
+            ) {
+
+                clickCount = 1;
+                firstClickTime = currentTime;
+
+            } else {
+
+                clickCount++;
+            }
+
+
+            if (clickCount === 5) {
+
+                clickCount = 0;
+
+                const password =
+                    prompt('Masukkan Password Admin:');
+
+
+                if (password === '404') {
+
+                    aktifkanModeAdmin();
+
+                } else {
+
+                    alert('Password salah!');
+                }
+            }
+        });
+    }
+
+
+    // =========================
+    // AKTIFKAN MODE ADMIN
+    // =========================
+
+    function aktifkanModeAdmin() {
+
+        isAdmin = true;
+
+
+        const adminForm =
+            document.getElementById('admin-form');
+
+        const adminStatus =
+            document.getElementById('admin-status');
+
+
+        if (adminForm) {
+            adminForm.style.display = 'block';
         }
 
 
-        const tugas =
-            document.getElementById('tugas').value;
+        if (adminStatus) {
+            adminStatus.style.display = 'block';
+        }
 
 
-        const deadline =
-            document.getElementById('deadline').value;
+        document.querySelectorAll('.col-aksi')
+            .forEach(el => {
+                el.style.display = 'table-cell';
+            });
 
 
-        const keterangan =
-            document.getElementById('keterangan').value;
+        tampilkanTugas();
+    }
 
 
-        const { error } =
+    // =========================
+    // AMBIL DATA DARI SUPABASE
+    // =========================
+
+    async function dapatkanTugas() {
+
+        const { data, error } =
             await supabaseClient
                 .from('tugas')
-                .insert([
-                    {
-                        mapel: mapel,
-                        tugas: tugas,
-                        deadline: deadline,
-                        keterangan: keterangan
-                    }
-                ]);
+                .select('*')
+                .order('created_at', {
+                    ascending: false
+                });
 
 
         if (error) {
 
             console.error(
-                'Gagal menambahkan tugas:',
+                'Gagal mengambil tugas:',
                 error
             );
 
-            alert(
-                'Gagal menambahkan tugas.'
-            );
+            alert('Gagal memuat data tugas.');
+
+            return [];
+        }
+
+
+        return data || [];
+    }
+
+
+    // =========================
+    // WARNA MAPEL
+    // =========================
+
+    function warnaMapel(mapel) {
+
+        const nama =
+            mapel.trim().toLowerCase();
+
+
+        const warna = {
+
+            'b. arab': 'mapel-arab',
+
+            'b. indo': 'mapel-indo',
+
+            'b. inggris': 'mapel-inggris',
+
+            'biologi': 'mapel-biologi',
+
+            'fisika': 'mapel-fisika',
+
+            'kimia': 'mapel-kimia',
+
+            'matlan': 'mapel-matlan',
+
+            'matwa': 'mapel-matwa',
+
+            'pai': 'mapel-pai',
+
+            'ppkn': 'mapel-ppkn',
+
+            'sejarah': 'mapel-sejarah',
+
+            'tik': 'mapel-tik'
+        };
+
+
+        return warna[nama] || '';
+    }
+
+
+    // =========================
+    // TAMPILKAN DATA TUGAS
+    // =========================
+
+    async function tampilkanTugas() {
+
+        const daftarTugas =
+            await dapatkanTugas();
+
+
+        tableBody.innerHTML = '';
+
+
+        if (daftarTugas.length === 0) {
+
+            const totalKolom =
+                isAdmin ? 6 : 5;
+
+
+            tableBody.innerHTML = `
+                <tr>
+                    <td
+                        colspan="${totalKolom}"
+                        class="no-data"
+                    >
+                        Belum ada agenda atau tugas kelas saat ini.
+                    </td>
+                </tr>
+            `;
 
             return;
         }
 
 
-        await tampilkanTugas();
+        daftarTugas.forEach(
+            (item, index) => {
+
+                const tr =
+                    document.createElement('tr');
 
 
-        form.reset();
+                let isiBaris = `
+
+                    <td>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        <span class="mapel-badge ${warnaMapel(item.mapel)}">
+                            ${item.mapel}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${item.tugas}
+                    </td>
+
+                    <td>
+                        ${item.deadline}
+                    </td>
+
+                    <td>
+                        ${item.keterangan || '-'}
+                    </td>
+                `;
 
 
-        mapelCustom.style.display = 'none';
-        mapelCustom.required = false;
-        mapelCustom.value = '';
+                if (isAdmin) {
+
+                    isiBaris += `
+
+                        <td class="col-aksi">
+
+                            <button
+                                class="btn-edit"
+                                onclick="editTugas(${item.id})"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="btn-delete"
+                                onclick="hapusTugas(${item.id})"
+                            >
+                                Hapus
+                            </button>
+
+                        </td>
+                    `;
+                }
+
+
+                tr.innerHTML =
+                    isiBaris;
+
+
+                tableBody.appendChild(tr);
+            }
+        );
+
+
+        document.querySelectorAll('.col-aksi')
+            .forEach(el => {
+
+                el.style.display =
+                    isAdmin
+                        ? 'table-cell'
+                        : 'none';
+            });
     }
-);
 
 
-// =========================
-// HAPUS TUGAS
-// =========================
+    // =========================
+    // TAMBAH TUGAS
+    // =========================
 
-window.hapusTugas =
-    async function(id) {
+    todoForm.addEventListener(
+        'submit',
+        async function(e) {
 
-        if (
-            confirm(
-                "Apakah Anda yakin ingin menghapus tugas ini?"
-            )
-        ) {
+            e.preventDefault();
+
+
+            let mapel =
+                mapelSelect.value;
+
+
+            // Jika memilih Custom
+            if (mapel === 'Custom') {
+
+                mapel =
+                    mapelCustom.value.trim();
+
+
+                if (!mapel) {
+
+                    alert(
+                        'Silakan masukkan nama mata pelajaran.'
+                    );
+
+                    return;
+                }
+            }
+
+
+            const tugas =
+                document.getElementById('tugas').value;
+
+
+            const deadline =
+                document.getElementById('deadline').value;
+
+
+            const keterangan =
+                document.getElementById('keterangan').value;
+
+
+            const { error } =
+                await supabaseClient
+                    .from('tugas')
+                    .insert([
+                        {
+                            mapel: mapel,
+                            tugas: tugas,
+                            deadline: deadline,
+                            keterangan: keterangan
+                        }
+                    ]);
+
+
+            if (error) {
+
+                console.error(
+                    'Gagal menambahkan tugas:',
+                    error
+                );
+
+                alert(
+                    'Gagal menambahkan tugas.'
+                );
+
+                return;
+            }
+
+
+            await tampilkanTugas();
+
+
+            todoForm.reset();
+
+
+            mapelCustom.style.display = 'none';
+            mapelCustom.required = false;
+            mapelCustom.value = '';
+        }
+    );
+
+
+    // =========================
+    // HAPUS TUGAS
+    // =========================
+
+    window.hapusTugas =
+        async function(id) {
+
+            if (
+                !confirm(
+                    'Apakah Anda yakin ingin menghapus tugas ini?'
+                )
+            ) {
+                return;
+            }
+
 
             const { error } =
                 await supabaseClient
@@ -427,106 +482,111 @@ window.hapusTugas =
 
 
             await tampilkanTugas();
-        }
-    };
+        };
 
 
-// =========================
-// EDIT TUGAS
-// =========================
+    // =========================
+    // EDIT TUGAS
+    // =========================
 
-window.editTugas =
-    async function(id) {
+    window.editTugas =
+        async function(id) {
 
-        const daftarTugas =
-            await dapatkanTugas();
-
-
-        const tugas =
-            daftarTugas.find(
-                item => item.id === id
-            );
+            const daftarTugas =
+                await dapatkanTugas();
 
 
-        if (!tugas) {
-
-            alert(
-                'Tugas tidak ditemukan.'
-            );
-
-            return;
-        }
+            const tugas =
+                daftarTugas.find(
+                    item => item.id === id
+                );
 
 
-        const mapel =
-            prompt(
-                'Mata Pelajaran:',
-                tugas.mapel
-            );
+            if (!tugas) {
 
-        if (mapel === null) return;
+                alert(
+                    'Tugas tidak ditemukan.'
+                );
 
-
-        const namaTugas =
-            prompt(
-                'Nama Tugas / Agenda:',
-                tugas.tugas
-            );
-
-        if (namaTugas === null) return;
+                return;
+            }
 
 
-        const deadline =
-            prompt(
-                'Deadline:',
-                tugas.deadline
-            );
-
-        if (deadline === null) return;
+            const mapel =
+                prompt(
+                    'Mata Pelajaran:',
+                    tugas.mapel
+                );
 
 
-        const keterangan =
-            prompt(
-                'Keterangan:',
-                tugas.keterangan || ''
-            );
-
-        if (keterangan === null) return;
+            if (mapel === null) return;
 
 
-        const { error } =
-            await supabaseClient
-                .from('tugas')
-                .update({
-                    mapel: mapel,
-                    tugas: namaTugas,
-                    deadline: deadline,
-                    keterangan: keterangan
-                })
-                .eq('id', id);
+            const namaTugas =
+                prompt(
+                    'Nama Tugas / Agenda:',
+                    tugas.tugas
+                );
 
 
-        if (error) {
-
-            console.error(
-                'Gagal mengedit tugas:',
-                error
-            );
-
-            alert(
-                'Gagal mengedit tugas.'
-            );
-
-            return;
-        }
+            if (namaTugas === null) return;
 
 
-        await tampilkanTugas();
-    };
+            const deadline =
+                prompt(
+                    'Deadline:',
+                    tugas.deadline
+                );
 
 
-// =========================
-// JALANKAN SAAT HALAMAN DIBUKA
-// =========================
+            if (deadline === null) return;
 
-tampilkanTugas();
+
+            const keterangan =
+                prompt(
+                    'Keterangan:',
+                    tugas.keterangan || ''
+                );
+
+
+            if (keterangan === null) return;
+
+
+            const { error } =
+                await supabaseClient
+                    .from('tugas')
+                    .update({
+                        mapel: mapel,
+                        tugas: namaTugas,
+                        deadline: deadline,
+                        keterangan: keterangan
+                    })
+                    .eq('id', id);
+
+
+            if (error) {
+
+                console.error(
+                    'Gagal mengedit tugas:',
+                    error
+                );
+
+                alert(
+                    'Gagal mengedit tugas.'
+                );
+
+                return;
+            }
+
+
+            await tampilkanTugas();
+        };
+
+
+    // =========================
+    // JALANKAN SAAT HALAMAN DIBUKA
+    // =========================
+
+    tampilkanTugas();
+
+});
