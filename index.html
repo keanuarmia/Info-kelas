@@ -186,6 +186,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+    const SUPABASE_URL = 'https://ofikhymoplfgahogmeml.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_j0DKnHBNpb6HCHW7aal3oA_KaLCTTwZ';
+    
+    const supabase = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+    
     const form = document.getElementById('todo-form');
     const tableBody = document.getElementById('table-body');
     const secretTitle = document.getElementById('secret-title');
