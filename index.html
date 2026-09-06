@@ -432,25 +432,24 @@
 
                 // Tombol edit dan hapus hanya untuk admin
                 if (isAdmin) {
-                    isiBaris += `
-                        <td class="col-aksi">
-                            <button
-                                class="btn-edit"
-                                onclick="editTugas(${item.id})"
-                            >
-                                Edit
-                            </button>
+    isiBaris += `
+        <td class="col-aksi">
+            <button
+                class="btn-edit"
+                onclick="editTugas(${item.id})"
+            >
+                Edit
+            </button>
 
-                            <button
-                                class="btn-delete"
-                                onclick="hapusTugas(${item.id})"
-                            >
-                                Hapus
-                            </button>
-                        </td>
-                    `;
-                }
-
+            <button
+                class="btn-delete"
+                onclick="hapusTugas(${item.id})"
+            >
+                Hapus
+            </button>
+        </td>
+    `;
+}
                 tr.innerHTML =
                     isiBaris;
 
