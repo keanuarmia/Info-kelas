@@ -6,7 +6,7 @@ const SUPABASE_URL =
     'https://ofikhymoplfgahogmeml.supabase.co';
 
 const SUPABASE_KEY =
-    'ISI_PUBLISHABLE_KEY_KAMU_DI_SINI';
+    'sb_publishable_j0DKnHBNpb6HCHW7aal3oA_KaLCTTwZ';
 
 const supabaseClient =
     window.supabase.createClient(
