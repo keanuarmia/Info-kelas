@@ -1,8 +1,12 @@
+// =========================
+// PENGATURAN SUPABASE
+// =========================
+
 const SUPABASE_URL =
     'https://ofikhymoplfgahogmeml.supabase.co';
 
 const SUPABASE_KEY =
-    'sb_publishable_j0DKnHBNpb6HCHW7aal3oA_KaLCTTwZ';
+    'ISI_PUBLISHABLE_KEY_KAMU_DI_SINI';
 
 const supabaseClient =
     window.supabase.createClient(
@@ -10,11 +14,32 @@ const supabaseClient =
         SUPABASE_KEY
     );
 
+
+// =========================
+// ELEMENT HTML
+// =========================
+
+const form =
+    document.getElementById('todo-form');
+
+const tableBody =
+    document.getElementById('table-body');
+
+const secretTitle =
+    document.getElementById('secret-title');
+
 const mapelSelect =
     document.getElementById('mapel');
 
 const mapelCustom =
     document.getElementById('mapel-custom');
+
+let isAdmin = false;
+
+
+// =========================
+// CUSTOM MAPEL
+// =========================
 
 mapelSelect.addEventListener('change', () => {
 
@@ -31,15 +56,16 @@ mapelSelect.addEventListener('change', () => {
     }
 });
 
-const secretTitle =
-    document.getElementById('secret-title');
 
-let isAdmin = false;
+// =========================
+// KLIK RAHASIA 5X PADA "NO"
+// =========================
 
 let clickCount = 0;
 let firstClickTime = 0;
 
 secretTitle.addEventListener('click', () => {
+
     const currentTime =
         new Date().getTime();
 
@@ -48,27 +74,40 @@ secretTitle.addEventListener('click', () => {
     }
 
     if (currentTime - firstClickTime > 3000) {
+
         clickCount = 1;
         firstClickTime = currentTime;
+
     } else {
+
         clickCount++;
     }
 
     if (clickCount === 5) {
+
         clickCount = 0;
 
         const password =
             prompt("Masukkan Password Admin:");
 
         if (password === "404") {
+
             aktifkanModeAdmin();
+
         } else {
+
             alert("Password salah!");
         }
     }
 });
 
+
+// =========================
+// AKTIFKAN MODE ADMIN
+// =========================
+
 function aktifkanModeAdmin() {
+
     isAdmin = true;
 
     document.getElementById('admin-form')
@@ -85,7 +124,13 @@ function aktifkanModeAdmin() {
     tampilkanTugas();
 }
 
+
+// =========================
+// AMBIL DATA DARI SUPABASE
+// =========================
+
 async function dapatkanTugas() {
+
     const { data, error } =
         await supabaseClient
             .from('tugas')
@@ -95,6 +140,7 @@ async function dapatkanTugas() {
             });
 
     if (error) {
+
         console.error(
             'Gagal mengambil tugas:',
             error
@@ -110,34 +156,61 @@ async function dapatkanTugas() {
     return data || [];
 }
 
+
+// =========================
+// WARNA MAPEL
+// =========================
+
 function warnaMapel(mapel) {
-    const nama = mapel.trim().toLowerCase();
+
+    const nama =
+        mapel.trim().toLowerCase();
 
     const warna = {
+
         'b. arab': 'mapel-arab',
+
         'b. indo': 'mapel-indo',
+
         'b. inggris': 'mapel-inggris',
+
         'biologi': 'mapel-biologi',
+
         'fisika': 'mapel-fisika',
+
         'kimia': 'mapel-kimia',
+
         'matlan': 'mapel-matlan',
+
         'matwa': 'mapel-matwa',
+
         'pai': 'mapel-pai',
+
         'ppkn': 'mapel-ppkn',
+
         'sejarah': 'mapel-sejarah',
+
         'tik': 'mapel-tik'
     };
 
     return warna[nama] || '';
 }
 
+
+// =========================
+// TAMPILKAN DATA TUGAS
+// =========================
+
 async function tampilkanTugas() {
+
     const daftarTugas =
         await dapatkanTugas();
 
     tableBody.innerHTML = '';
 
+
     if (daftarTugas.length === 0) {
+
         const totalKolom =
             isAdmin ? 6 : 5;
 
@@ -155,12 +228,15 @@ async function tampilkanTugas() {
         return;
     }
 
+
     daftarTugas.forEach(
         (item, index) => {
+
             const tr =
                 document.createElement('tr');
 
             let isiBaris = `
+
                 <td>
                     ${index + 1}
                 </td>
@@ -184,9 +260,13 @@ async function tampilkanTugas() {
                 </td>
             `;
 
+
             if (isAdmin) {
+
                 isiBaris += `
+
                     <td class="col-aksi">
+
                         <button
                             class="btn-edit"
                             onclick="editTugas(${item.id})"
@@ -200,9 +280,11 @@ async function tampilkanTugas() {
                         >
                             Hapus
                         </button>
+
                     </td>
                 `;
             }
+
 
             tr.innerHTML =
                 isiBaris;
@@ -211,8 +293,10 @@ async function tampilkanTugas() {
         }
     );
 
+
     document.querySelectorAll('.col-aksi')
         .forEach(el => {
+
             el.style.display =
                 isAdmin
                     ? 'table-cell'
@@ -220,27 +304,51 @@ async function tampilkanTugas() {
         });
 }
 
+
+// =========================
+// TAMBAH TUGAS
+// =========================
+
 form.addEventListener(
     'submit',
     async function(e) {
+
         e.preventDefault();
+
 
         let mapel =
             document.getElementById('mapel').value;
-        
+
+
+        // Jika memilih Custom,
+        // gunakan nama yang diketik
         if (mapel === 'Custom') {
+
             mapel =
-                document.getElementById('mapel-custom').value;
+                document.getElementById('mapel-custom').value.trim();
+
+            if (!mapel) {
+
+                alert(
+                    'Silakan masukkan nama mata pelajaran.'
+                );
+
+                return;
+            }
         }
-        
+
+
         const tugas =
             document.getElementById('tugas').value;
+
 
         const deadline =
             document.getElementById('deadline').value;
 
+
         const keterangan =
             document.getElementById('keterangan').value;
+
 
         const { error } =
             await supabaseClient
@@ -254,7 +362,9 @@ form.addEventListener(
                     }
                 ]);
 
+
         if (error) {
+
             console.error(
                 'Gagal menambahkan tugas:',
                 error
@@ -267,26 +377,42 @@ form.addEventListener(
             return;
         }
 
+
         await tampilkanTugas();
 
+
         form.reset();
+
+
+        mapelCustom.style.display = 'none';
+        mapelCustom.required = false;
+        mapelCustom.value = '';
     }
 );
 
+
+// =========================
+// HAPUS TUGAS
+// =========================
+
 window.hapusTugas =
     async function(id) {
+
         if (
             confirm(
                 "Apakah Anda yakin ingin menghapus tugas ini?"
             )
         ) {
+
             const { error } =
                 await supabaseClient
                     .from('tugas')
                     .delete()
                     .eq('id', id);
 
+
             if (error) {
+
                 console.error(
                     'Gagal menghapus tugas:',
                     error
@@ -299,24 +425,38 @@ window.hapusTugas =
                 return;
             }
 
+
             await tampilkanTugas();
         }
     };
 
+
+// =========================
+// EDIT TUGAS
+// =========================
+
 window.editTugas =
     async function(id) {
+
         const daftarTugas =
             await dapatkanTugas();
+
 
         const tugas =
             daftarTugas.find(
                 item => item.id === id
             );
 
+
         if (!tugas) {
-            alert('Tugas tidak ditemukan.');
+
+            alert(
+                'Tugas tidak ditemukan.'
+            );
+
             return;
         }
+
 
         const mapel =
             prompt(
@@ -326,6 +466,7 @@ window.editTugas =
 
         if (mapel === null) return;
 
+
         const namaTugas =
             prompt(
                 'Nama Tugas / Agenda:',
@@ -333,6 +474,7 @@ window.editTugas =
             );
 
         if (namaTugas === null) return;
+
 
         const deadline =
             prompt(
@@ -342,6 +484,7 @@ window.editTugas =
 
         if (deadline === null) return;
 
+
         const keterangan =
             prompt(
                 'Keterangan:',
@@ -349,6 +492,7 @@ window.editTugas =
             );
 
         if (keterangan === null) return;
+
 
         const { error } =
             await supabaseClient
@@ -361,7 +505,9 @@ window.editTugas =
                 })
                 .eq('id', id);
 
+
         if (error) {
+
             console.error(
                 'Gagal mengedit tugas:',
                 error
@@ -374,7 +520,13 @@ window.editTugas =
             return;
         }
 
+
         await tampilkanTugas();
     };
+
+
+// =========================
+// JALANKAN SAAT HALAMAN DIBUKA
+// =========================
 
 tampilkanTugas();
