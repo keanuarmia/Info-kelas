@@ -187,6 +187,27 @@ async function dapatkanTugas() {
     return data || [];
 }
 
+function warnaMapel(mapel) {
+    const nama = mapel.trim().toLowerCase();
+
+    const warna = {
+        'b. arab': 'mapel-arab',
+        'b. indo': 'mapel-indo',
+        'b. inggris': 'mapel-inggris',
+        'biologi': 'mapel-biologi',
+        'fisika': 'mapel-fisika',
+        'kimia': 'mapel-kimia',
+        'matlan': 'mapel-matlan',
+        'matwa': 'mapel-matwa',
+        'pai': 'mapel-pai',
+        'ppkn': 'mapel-ppkn',
+        'sejarah': 'mapel-sejarah',
+        'tik': 'mapel-tik'
+    };
+
+    return warna[nama] || '';
+}
+
 async function tampilkanTugas() {
     const daftarTugas =
         await dapatkanTugas();
@@ -222,9 +243,9 @@ async function tampilkanTugas() {
                 </td>
 
                 <td>
-                    <strong>
+                    <span class="mapel-badge ${warnaMapel(item.mapel)}">
                         ${item.mapel}
-                    </strong>
+                    </span>
                 </td>
 
                 <td>
