@@ -2,7 +2,7 @@ const SUPABASE_URL =
     'https://ofikhymoplfgahogmeml.supabase.co';
 
 const SUPABASE_KEY =
-    'sb_publishable_----------------------';
+    'sb_publishable_j0DKnHBNpb6HCHW7aal3oA_KaLCTTwZ';
 
 const supabaseClient =
     window.supabase.createClient(
