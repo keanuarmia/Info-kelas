@@ -30,12 +30,33 @@
 
                 <div class="form-group">
                     <label for="mapel">Mata Pelajaran</label>
-
+                
+                    <select id="mapel" required>
+                        <option value="" disabled selected>
+                            Pilih Mata Pelajaran
+                        </option>
+                
+                        <option value="B. Arab">B. Arab</option>
+                        <option value="B. Indo">B. Indo</option>
+                        <option value="B. Inggris">B. Inggris</option>
+                        <option value="Biologi">Biologi</option>
+                        <option value="Fisika">Fisika</option>
+                        <option value="Kimia">Kimia</option>
+                        <option value="Matlan">Matlan</option>
+                        <option value="Matwa">Matwa</option>
+                        <option value="PAI">PAI</option>
+                        <option value="PPKn">PPKn</option>
+                        <option value="Sejarah">Sejarah</option>
+                        <option value="TIK">TIK</option>
+                
+                        <option value="Custom">Custom</option>
+                    </select>
+                
                     <input
                         type="text"
-                        id="mapel"
-                        placeholder="Contoh: Matematika"
-                        required
+                        id="mapel-custom"
+                        placeholder="Masukkan nama mata pelajaran"
+                        style="display: none; margin-top: 8px;"
                     >
                 </div>
 
