@@ -10,11 +10,26 @@ const supabaseClient =
         SUPABASE_KEY
     );
 
-const form =
-    document.getElementById('todo-form');
+const mapelSelect =
+    document.getElementById('mapel');
 
-const tableBody =
-    document.getElementById('table-body');
+const mapelCustom =
+    document.getElementById('mapel-custom');
+
+mapelSelect.addEventListener('change', () => {
+
+    if (mapelSelect.value === 'Custom') {
+
+        mapelCustom.style.display = 'block';
+        mapelCustom.required = true;
+
+    } else {
+
+        mapelCustom.style.display = 'none';
+        mapelCustom.required = false;
+        mapelCustom.value = '';
+    }
+});
 
 const secretTitle =
     document.getElementById('secret-title');
@@ -210,9 +225,14 @@ form.addEventListener(
     async function(e) {
         e.preventDefault();
 
-        const mapel =
+        let mapel =
             document.getElementById('mapel').value;
-
+        
+        if (mapel === 'Custom') {
+            mapel =
+                document.getElementById('mapel-custom').value;
+        }
+        
         const tugas =
             document.getElementById('tugas').value;
 
