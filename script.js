@@ -357,92 +357,128 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // =========================
-    // TAMBAH TUGAS
-    // =========================
+   // =========================
+// TAMBAH TUGAS
+// =========================
 
-    todoForm.addEventListener(
-        'submit',
-        async function(e) {
+todoForm.addEventListener(
+    'submit',
+    async function(e) {
 
-            e.preventDefault();
-
-
-            let mapel =
-                mapelSelect.value;
+        e.preventDefault();
 
 
-            // Jika memilih Custom
-            if (mapel === 'Custom') {
-
-                mapel =
-                    mapelCustom.value.trim();
+        let mapel =
+            mapelSelect.value;
 
 
-                if (!mapel) {
+        // Jika memilih Custom
+        if (mapel === 'Custom') {
 
-                    alert(
-                        'Silakan masukkan nama mata pelajaran.'
-                    );
-
-                    return;
-                }
-            }
+            mapel =
+                mapelCustom.value.trim();
 
 
-            const tugas =
-                document.getElementById('tugas').value;
-
-
-            const deadline =
-                document.getElementById('deadline').value;
-
-
-            const keterangan =
-                document.getElementById('keterangan').value;
-
-
-            const { error } =
-                await supabaseClient
-                    .from('tugas')
-                    .insert([
-                        {
-                            mapel: mapel,
-                            tugas: tugas,
-                            deadline: deadline,
-                            keterangan: keterangan
-                        }
-                    ]);
-
-
-            if (error) {
-
-                console.error(
-                    'Gagal menambahkan tugas:',
-                    error
-                );
+            if (!mapel) {
 
                 alert(
-                    'Gagal menambahkan tugas.'
+                    'Silakan masukkan nama mata pelajaran.'
                 );
 
                 return;
             }
-
-
-            await tampilkanTugas();
-
-
-            todoForm.reset();
-
-
-            mapelCustom.style.display = 'none';
-            mapelCustom.required = false;
-            mapelCustom.value = '';
         }
-    );
 
 
+        const tugas =
+            document.getElementById('tugas').value;
+
+
+        const deadline =
+            document.getElementById('deadline').value;
+
+
+        const keterangan =
+            document.getElementById('keterangan').value;
+
+
+        // =========================
+        // SIMPAN TUGAS
+        // =========================
+
+        const { data, error } =
+            await supabaseClient
+                .from('tugas')
+                .insert([
+                    {
+                        mapel: mapel,
+                        tugas: tugas,
+                        deadline: deadline,
+                        keterangan: keterangan
+                    }
+                ])
+                .select();
+
+
+        if (error) {
+
+            console.error(
+                'Gagal menambahkan tugas:',
+                error
+            );
+
+            alert(
+                'Gagal menambahkan tugas.'
+            );
+
+            return;
+        }
+
+
+        // =========================
+        // SIMPAN HISTORY
+        // =========================
+
+        const { error: historyError } =
+            await supabaseClient
+                .from('history')
+                .insert([
+                    {
+                        aktivitas: 'Tambah',
+                        mapel: mapel,
+                        tugas: tugas
+                    }
+                ]);
+
+
+        if (historyError) {
+
+            console.error(
+                'Gagal menyimpan history:',
+                historyError
+            );
+        }
+
+
+        // =========================
+        // PERBARUI TABEL
+        // =========================
+
+        await tampilkanTugas();
+
+
+        // =========================
+        // RESET FORM
+        // =========================
+
+        todoForm.reset();
+
+
+        mapelCustom.style.display = 'none';
+        mapelCustom.required = false;
+        mapelCustom.value = '';
+    }
+);
     // =========================
     // HAPUS TUGAS
     // =========================
