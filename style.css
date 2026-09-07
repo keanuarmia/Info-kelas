@@ -144,6 +144,24 @@ tr:hover {
     padding: 20px;
 }
 
+/* =========================
+   TABEL HISTORY
+========================= */
+
+#history-section table {
+    width: 100%;
+}
+
+#history-section th,
+#history-section td {
+    white-space: nowrap;
+}
+
+#history-section th:last-child,
+#history-section td:last-child {
+    text-align: center;
+}
+
 .admin-badge {
     display: none;
     text-align: center;
