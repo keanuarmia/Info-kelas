@@ -776,7 +776,7 @@ window.hapusTugas =
                         aktivitas: 'Edit',
                         mapel: mapel,
                         tugas: namaTugas,
-                        keterangan: Keterangan
+                        keterangan: keterangan
                     }
                 ]);
 
