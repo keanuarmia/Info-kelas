@@ -628,98 +628,118 @@ todoForm.addEventListener(
     // EDIT TUGAS
     // =========================
 
-    window.editTugas =
-        async function(id) {
+   window.editTugas =
+    async function(id) {
 
-            const daftarTugas =
-                await dapatkanTugas();
+        const daftarTugas =
+            await dapatkanTugas();
 
+        const tugas =
+            daftarTugas.find(
+                item => item.id === id
+            );
 
-            const tugas =
-                daftarTugas.find(
-                    item => item.id === id
-                );
+        if (!tugas) {
 
+            alert(
+                'Tugas tidak ditemukan.'
+            );
 
-            if (!tugas) {
+            return;
+        }
 
-                alert(
-                    'Tugas tidak ditemukan.'
-                );
+        const mapel =
+            prompt(
+                'Mata Pelajaran:',
+                tugas.mapel
+            );
 
-                return;
-            }
+        if (mapel === null) return;
 
+        const namaTugas =
+            prompt(
+                'Nama Tugas / Agenda:',
+                tugas.tugas
+            );
 
-            const mapel =
-                prompt(
-                    'Mata Pelajaran:',
-                    tugas.mapel
-                );
+        if (namaTugas === null) return;
 
+        const deadline =
+            prompt(
+                'Deadline:',
+                tugas.deadline
+            );
 
-            if (mapel === null) return;
+        if (deadline === null) return;
 
+        const keterangan =
+            prompt(
+                'Keterangan:',
+                tugas.keterangan || ''
+            );
 
-            const namaTugas =
-                prompt(
-                    'Nama Tugas / Agenda:',
-                    tugas.tugas
-                );
+        if (keterangan === null) return;
 
+        // =========================
+        // UPDATE TUGAS
+        // =========================
 
-            if (namaTugas === null) return;
+        const { error } =
+            await supabaseClient
+                .from('tugas')
+                .update({
+                    mapel: mapel,
+                    tugas: namaTugas,
+                    deadline: deadline,
+                    keterangan: keterangan
+                })
+                .eq('id', id);
 
+        if (error) {
 
-            const deadline =
-                prompt(
-                    'Deadline:',
-                    tugas.deadline
-                );
+            console.error(
+                'Gagal mengedit tugas:',
+                error
+            );
 
+            alert(
+                'Gagal mengedit tugas.'
+            );
 
-            if (deadline === null) return;
+            return;
+        }
 
+        // =========================
+        // SIMPAN HISTORY
+        // =========================
 
-            const keterangan =
-                prompt(
-                    'Keterangan:',
-                    tugas.keterangan || ''
-                );
-
-
-            if (keterangan === null) return;
-
-
-            const { error } =
-                await supabaseClient
-                    .from('tugas')
-                    .update({
+        const { error: historyError } =
+            await supabaseClient
+                .from('history')
+                .insert([
+                    {
+                        aktivitas: 'Edit',
                         mapel: mapel,
-                        tugas: namaTugas,
-                        deadline: deadline,
-                        keterangan: keterangan
-                    })
-                    .eq('id', id);
+                        tugas: namaTugas
+                    }
+                ]);
 
+        if (historyError) {
 
-            if (error) {
+            console.error(
+                'Gagal menyimpan history:',
+                historyError
+            );
+        }
 
-                console.error(
-                    'Gagal mengedit tugas:',
-                    error
-                );
+        // =========================
+        // PERBARUI TABEL
+        // =========================
 
-                alert(
-                    'Gagal mengedit tugas.'
-                );
+        await tampilkanTugas();
 
-                return;
-            }
-
-
-            await tampilkanTugas();
-        };
+        await tampilkanHistory();
+    };
 
 
     // =========================
