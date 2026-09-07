@@ -811,3 +811,41 @@ window.hapusTugas =
     tampilkanTugas();
 
 });
+
+// =========================
+// HAPUS HISTORY
+// =========================
+
+window.hapusHistory =
+    async function(id) {
+
+        if (
+            !confirm(
+                'Apakah Anda yakin ingin menghapus log ini?'
+            )
+        ) {
+            return;
+        }
+
+        const { error } =
+            await supabaseClient
+                .from('history')
+                .delete()
+                .eq('id', id);
+
+        if (error) {
+
+            console.error(
+                'Gagal menghapus history:',
+                error
+            );
+
+            alert(
+                'Gagal menghapus history.'
+            );
+
+            return;
+        }
+
+        await tampilkanHistory();
+    };
