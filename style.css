@@ -150,11 +150,54 @@ tr:hover {
 
 #history-section table {
     width: 100%;
+    table-layout: fixed;
 }
 
 #history-section th,
 #history-section td {
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#history-section th:nth-child(1),
+#history-section td:nth-child(1) {
+    width: 5%;
+}
+
+#history-section th:nth-child(2),
+#history-section td:nth-child(2) {
+    width: 10%;
+}
+
+#history-section th:nth-child(3),
+#history-section td:nth-child(3) {
+    width: 15%;
+}
+
+#history-section th:nth-child(4),
+#history-section td:nth-child(4) {
+    width: 20%;
+}
+
+#history-section th:nth-child(5),
+#history-section td:nth-child(5) {
+    width: 15%;
+}
+
+#history-section th:nth-child(6),
+#history-section td:nth-child(6) {
+    width: 15%;
+}
+
+#history-section th:nth-child(7),
+#history-section td:nth-child(7) {
+    width: 15%;
+}
+
+#history-section th:nth-child(8),
+#history-section td:nth-child(8) {
+    width: 5%;
 }
 
 #history-section th:last-child,
