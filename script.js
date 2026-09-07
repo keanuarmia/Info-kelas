@@ -206,7 +206,7 @@ async function tampilkanHistory() {
 
         historyBody.innerHTML = `
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     Gagal memuat history.
                 </td>
             </tr>
@@ -221,7 +221,7 @@ async function tampilkanHistory() {
 
         historyBody.innerHTML = `
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     Belum ada aktivitas.
                 </td>
             </tr>
@@ -251,6 +251,10 @@ async function tampilkanHistory() {
 
             <td>
                 ${item.tugas || '-'}
+            </td>
+
+            <td>
+                ${item.deadline || '-'}
             </td>
             
             <td>
@@ -554,6 +558,7 @@ todoForm.addEventListener(
                         aktivitas: 'Tambah',
                         mapel: mapel,
                         tugas: tugas,
+                        deadline: deadline,
                         keterangan: keterangan
                     }
                 ]);
@@ -659,6 +664,7 @@ window.hapusTugas =
                         aktivitas: 'Hapus',
                         mapel: tugas.mapel,
                         tugas: tugas.tugas,
+                        deadline: tugas.deadline,
                         keterangan: tugas.keterangan
                     }
                 ]);
