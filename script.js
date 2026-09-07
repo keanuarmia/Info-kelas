@@ -206,7 +206,7 @@ async function tampilkanHistory() {
 
         historyBody.innerHTML = `
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     Gagal memuat history.
                 </td>
             </tr>
@@ -221,7 +221,7 @@ async function tampilkanHistory() {
 
         historyBody.innerHTML = `
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     Belum ada aktivitas.
                 </td>
             </tr>
@@ -252,7 +252,11 @@ async function tampilkanHistory() {
             <td>
                 ${item.tugas || '-'}
             </td>
-
+            
+            <td>
+                ${item.keterangan || '-'}
+            </td>
+            
             <td>
                 ${new Date(item.created_at)
                     .toLocaleString('id-ID')}
@@ -549,7 +553,8 @@ todoForm.addEventListener(
                     {
                         aktivitas: 'Tambah',
                         mapel: mapel,
-                        tugas: tugas
+                        tugas: tugas,
+                        keterangan: keterangan
                     }
                 ]);
 
@@ -582,47 +587,97 @@ todoForm.addEventListener(
         mapelCustom.value = '';
     }
 );
-    // =========================
-    // HAPUS TUGAS
-    // =========================
+   // =========================
+// HAPUS TUGAS
+// =========================
 
-    window.hapusTugas =
-        async function(id) {
+window.hapusTugas =
+    async function(id) {
 
-            if (
-                !confirm(
-                    'Apakah Anda yakin ingin menghapus tugas ini?'
-                )
-            ) {
-                return;
-            }
+        if (
+            !confirm(
+                'Apakah Anda yakin ingin menghapus tugas ini?'
+            )
+        ) {
+            return;
+        }
 
+        // =========================
+        // CARI DATA TUGAS
+        // =========================
 
-            const { error } =
-                await supabaseClient
-                    .from('tugas')
-                    .delete()
-                    .eq('id', id);
+        const daftarTugas =
+            await dapatkanTugas();
 
+        const tugas =
+            daftarTugas.find(
+                item => item.id === id
+            );
 
-            if (error) {
+        if (!tugas) {
 
-                console.error(
-                    'Gagal menghapus tugas:',
-                    error
-                );
+            alert(
+                'Tugas tidak ditemukan.'
+            );
 
-                alert(
-                    'Gagal menghapus tugas.'
-                );
+            return;
+        }
 
-                return;
-            }
+        // =========================
+        // HAPUS TUGAS
+        // =========================
 
+        const { error } =
+            await supabaseClient
+                .from('tugas')
+                .delete()
+                .eq('id', id);
 
-            await tampilkanTugas();
-        };
+        if (error) {
 
+            console.error(
+                'Gagal menghapus tugas:',
+                error
+            );
+
+            alert(
+                'Gagal menghapus tugas.'
+            );
+
+            return;
+        }
+
+        // =========================
+        // SIMPAN HISTORY
+        // =========================
+
+        const { error: historyError } =
+            await supabaseClient
+                .from('history')
+                .insert([
+                    {
+                        aktivitas: 'Hapus',
+                        mapel: tugas.mapel,
+                        tugas: tugas.tugas,
+                        keterangan: tugas.keterangan
+                    }
+                ]);
+
+        if (historyError) {
+
+            console.error(
+                'Gagal menyimpan history:',
+                historyError
+            );
+        }
+
+        // =========================
+        // PERBARUI TABEL
+        // =========================
+
+        await tampilkanTugas();
+        await tampilkanHistory();
+    };
 
     // =========================
     // EDIT TUGAS
@@ -720,7 +775,8 @@ todoForm.addEventListener(
                     {
                         aktivitas: 'Edit',
                         mapel: mapel,
-                        tugas: namaTugas
+                        tugas: namaTugas,
+                        keterangan: Keterangan
                     }
                 ]);
 
