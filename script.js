@@ -568,7 +568,7 @@ todoForm.addEventListener(
         // =========================
 
         await tampilkanTugas();
-
+        await tampilkanHistory();
 
         // =========================
         // RESET FORM
