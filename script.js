@@ -168,8 +168,111 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         tampilkanTugas();
+        tampilkanHistory();
     }
 
+    // =========================
+// TAMPILKAN HISTORY
+// =========================
+
+async function tampilkanHistory() {
+
+    const historySection =
+        document.getElementById('history-section');
+
+    const historyBody =
+        document.getElementById('history-body');
+
+    if (!historySection || !historyBody) {
+        return;
+    }
+
+    historySection.style.display = 'block';
+
+    const { data, error } =
+        await supabaseClient
+            .from('history')
+            .select('*')
+            .order('created_at', {
+                ascending: false
+            });
+
+    if (error) {
+
+        console.error(
+            'Gagal mengambil history:',
+            error
+        );
+
+        historyBody.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    Gagal memuat history.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    historyBody.innerHTML = '';
+
+    if (!data || data.length === 0) {
+
+        historyBody.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    Belum ada aktivitas.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    data.forEach((item, index) => {
+
+        const tr =
+            document.createElement('tr');
+
+        tr.innerHTML = `
+
+            <td>
+                ${index + 1}
+            </td>
+
+            <td>
+                ${item.aktivitas}
+            </td>
+
+            <td>
+                ${item.mapel || '-'}
+            </td>
+
+            <td>
+                ${item.tugas || '-'}
+            </td>
+
+            <td>
+                ${new Date(item.created_at)
+                    .toLocaleString('id-ID')}
+            </td>
+
+            <td>
+
+                <button
+                    class="btn-delete"
+                    onclick="hapusHistory(${item.id})"
+                >
+                    Hapus
+                </button>
+
+            </td>
+        `;
+
+        historyBody.appendChild(tr);
+    });
+}
 
     // =========================
     // AMBIL DATA DARI SUPABASE
