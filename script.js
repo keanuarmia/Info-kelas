@@ -352,7 +352,7 @@ async function tampilkanHistory() {
         };
 
 
-        return warna[nama] || '';
+        return warna[nama] || 'mapel-custom';
     }
 
 
